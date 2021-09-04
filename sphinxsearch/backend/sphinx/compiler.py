@@ -3,7 +3,22 @@ import re
 
 from django.core.exceptions import FieldError, EmptyResultSet
 from django.db import models
-from django.db.models.expressions import Random
+try:
+    from django.db.models.expressions import Random
+except ImportError:
+    from django.db.models.expressions import Expression
+    from django.db.models import fields
+
+    class Random(Expression):
+        output_field = fields.FloatField()
+
+        def __repr__(self):
+            return "Random()"
+
+        def as_sql(self, compiler, connection):
+            # return connection.ops.random_function_sql(), []
+            raise NotImplementedError("Don't care about implementation of Random.as_sql()")
+
 from django.db.models.lookups import Exact
 from django.db.models.sql import compiler, AND
 from django.db.models.sql.constants import ORDER_DIR
