@@ -55,8 +55,8 @@ class SphinxQuery(Query):
                  'with_meta')
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('where', SphinxWhereNode)
         super().__init__(*args, **kwargs)
+        self.where = SphinxWhereNode()
 
     def clone(self):
         query = super().clone()
